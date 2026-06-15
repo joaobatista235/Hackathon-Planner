@@ -33,10 +33,10 @@ class ClassRepository {
       });
     }
 
-    async getByTeacherId(teacherId: string) {
+    async getByTeacherId(authorId: string) {
       return prisma.class.findMany({
-        where: { teacherId },
-        orderBy: { createdAt: "asc" },
+        where: { authorId },
+        orderBy: { id: "asc" },
       });
     }
 

@@ -13,11 +13,8 @@ model Post {
   content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
   authorId  String?
   author    User?    @relation(fields: [authorId], references: [id])
-  
-
 }
 
 model User {
@@ -26,34 +23,35 @@ model User {
   email     String   @unique
   password  String
   createdAt DateTime @default(now())
-  role     String @default("USER")
- 
-  posts     Post[]
-  classes  Class[]
+  role      String   @default("USER")
 
+  posts     Post[]
+
+  classes   Class[]  @relation("UserClasses")
+  lessons   Lesson[] @relation("UserLessons")
 }
 
-
 model Class {
-  id        String @id @default(uuid())
+  id        String   @id @default(uuid())
   name      String
   subject   String
 
-  teacherId String
-  teacher   User @relation(fields: [teacherId], references: [id])
-  createdAt DateTime @default(now())
+  authorId  String
+  author    User     @relation("UserClasses", fields: [authorId], references: [id])
 
   lessons   Lesson[]
 }
 
 model Lesson {
-  id          String @id @default(uuid())
+  id          String   @id @default(uuid())
   title       String
   description String
-
   date        DateTime
-  createdAt DateTime @default(now())
+  createdAt   DateTime @default(now())
 
   classId     String
-  class       Class @relation(fields: [classId], references: [id])
+  class       Class    @relation(fields: [classId], references: [id])
+
+  authorId    String
+  author      User     @relation("UserLessons", fields: [authorId], references: [id])
 }

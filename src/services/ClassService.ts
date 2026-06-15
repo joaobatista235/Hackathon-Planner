@@ -22,8 +22,8 @@ class ClassService {
     async delete(id: string) {
         return ClassRepository.delete(id);
     }
-    async getByTeacherId(teacherId: string) {
-        return ClassRepository.getByTeacherId(teacherId);
+    async getByTeacherId(authorId: string) {
+        return ClassRepository.getByTeacherId(authorId);
     }
     
 }

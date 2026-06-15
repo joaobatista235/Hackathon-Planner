@@ -14,12 +14,31 @@ class LessonController {
         return res.json(lessonData);
     }
 
-    async create(req: Request, res: Response) {
-        const teacherId = getUserFromToken(req);
-        const { title, description, classId } = req.body;
-        const newLesson = await lessonService.create({ title, description, class: { connect: { id: classId } },date: new Date()});
-        return res.status(201).json(newLesson);
-    }
+   async create(req: Request, res: Response) {
+    const authorId = getUserFromToken(req);
+
+    const { title, description, classId } = req.body;
+
+    const newLesson = await lessonService.create({
+        title,
+        description,
+        date: new Date(),
+
+        class: {
+            connect: {
+                id: classId
+            }
+        },
+
+        author: {
+            connect: {
+                id: authorId
+            }
+        }
+    });
+
+    return res.status(201).json(newLesson);
+}
 
     async update(req: Request, res: Response) {
         const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
