@@ -1,11 +1,13 @@
+import type { Prisma } from "@prisma/client";
+
 import prisma from "@/database/prisma";
-import { Prisma } from "@prisma/client";
 
 class PostsRepository {
   async getAll() {
-    return prisma.post.findMany({  include: {
-      author: true,
-    },
+    return prisma.post.findMany({
+      include: {
+        author: true,
+      },
       orderBy: { id: "asc" },
     });
   }
@@ -13,14 +15,18 @@ class PostsRepository {
   async getById(id: number) {
     return prisma.post.findUnique({
       where: { id },
-      include: {  author: true,
-      }
+      include: {
+        author: true,
+      },
     });
   }
 
   async create(data: Prisma.PostCreateInput) {
     return prisma.post.create({
       data,
+      include: {
+        author: true,
+      },
     });
   }
 
@@ -28,6 +34,9 @@ class PostsRepository {
     return prisma.post.update({
       where: { id },
       data,
+      include: {
+        author: true,
+      },
     });
   }
 
@@ -45,20 +54,22 @@ class PostsRepository {
           { content: { contains: term, mode: "insensitive" } },
         ],
       },
+      include: {
+        author: true,
+      },
       orderBy: { id: "asc" },
     });
   }
 
   async getByAuthorId(authorId: string) {
-  return prisma.post.findMany({
-    where: { authorId },
-    orderBy: { createdAt: "asc" },
-    include: {
-      author: true,
-    },
-  });
-}
-
+    return prisma.post.findMany({
+      where: { authorId },
+      orderBy: { createdAt: "asc" },
+      include: {
+        author: true,
+      },
+    });
+  }
 }
 
 export default new PostsRepository();

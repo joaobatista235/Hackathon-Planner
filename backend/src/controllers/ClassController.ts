@@ -1,74 +1,55 @@
-import { Request, Response } from 'express';
-import classService from '@/services/ClassService';
-import { getUserFromToken } from '@/utils/getUserFromToken';
+import type { Request, Response } from "express";
+
+import type { AuthRequest } from "@/middlewares/authenticate";
+import { asyncHandler } from "@/middlewares/asyncHandler";
+import classService from "@/services/ClassService";
 
 class ClassController {
-    async getAll(_req: Request, res: Response) {
-        const classes = await classService.getAll();
-        return res.json(classes);
-    }
+  getAll = asyncHandler(async (_req: Request, res: Response) => {
+    const classes = await classService.getAll();
+    return res.json(classes);
+  });
 
-    async getById(req: Request, res: Response) {
-        const id = Array.isArray(req.params.id)
-            ? req.params.id[0]
-            : req.params.id;
+  getById = asyncHandler(async (req: Request, res: Response) => {
+    const id = req.params.id as string;
+    const classData = await classService.getById(id);
+    return res.json(classData);
+  });
 
-        const classData = await classService.getById(id);
-        return res.json(classData);
-    }
+  create = asyncHandler(async (req: AuthRequest, res: Response) => {
+    const { name, subject } = req.body;
 
-    async create(req: Request, res: Response) {
-        const authorId = getUserFromToken(req);
+    const newClass = await classService.create({
+      name,
+      subject,
+      author: {
+        connect: {
+          id: req.userId!,
+        },
+      },
+    });
 
-        const { name, subject } = req.body;
+    return res.status(201).json(newClass);
+  });
 
-        const newClass = await classService.create({
-            name,
-            subject,
-            author: {
-                connect: {
-                    id: authorId
-                }
-            }
-        });
+  update = asyncHandler(async (req: Request, res: Response) => {
+    const id = req.params.id as string;
+    const { name, subject } = req.body;
+    const updatedClass = await classService.update(id, { name, subject });
+    return res.json(updatedClass);
+  });
 
-        return res.status(201).json(newClass);
-    }
+  delete = asyncHandler(async (req: Request, res: Response) => {
+    const id = req.params.id as string;
+    await classService.delete(id);
+    return res.status(204).send();
+  });
 
-    async update(req: Request, res: Response) {
-        const id = Array.isArray(req.params.id)
-            ? req.params.id[0]
-            : req.params.id;
-
-        const { name, subject } = req.body;
-
-        const updatedClass = await classService.update(id, {
-            name,
-            subject
-        });
-
-        return res.json(updatedClass);
-    }
-
-    async delete(req: Request, res: Response) {
-        const id = Array.isArray(req.params.id)
-            ? req.params.id[0]
-            : req.params.id;
-
-        await classService.delete(id);
-
-        return res.status(204).send();
-    }
-
-    async getByTeacherId(req: Request, res: Response) {
-        const authorId = Array.isArray(req.params.authorId)
-            ? req.params.authorId[0]
-            : req.params.authorId;
-
-        const classes = await classService.getByTeacherId(authorId);
-
-        return res.json(classes);
-    }
+  getByTeacherId = asyncHandler(async (req: Request, res: Response) => {
+    const authorId = req.params.authorId as string;
+    const classes = await classService.getByTeacherId(authorId);
+    return res.json(classes);
+  });
 }
 
 export default new ClassController();

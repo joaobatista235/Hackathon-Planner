@@ -1,21 +1,32 @@
-import { Request, Response, NextFunction } from "express"
-import jwt from "jsonwebtoken"
+import type { NextFunction, Response } from "express";
+import jwt from "jsonwebtoken";
 
-export function isAdmin(req: Request, res: Response, next: NextFunction) {
+import { env } from "@/env";
+import type { AuthRequest } from "@/middlewares/authenticate";
 
-  const auth = req.headers.authorization
+export function isAdmin(req: AuthRequest, res: Response, next: NextFunction) {
+  const auth = req.headers.authorization;
 
   if (!auth) {
-    return res.status(401).json({ error: "Token missing" })
+    return res.status(401).json({ error: "Token missing" });
   }
 
-  const token = auth.split(" ")[1]
+  const token = auth.split(" ")[1];
 
-  const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any
+  try {
+    const decoded = jwt.verify(token, env.JWT_SECRET) as {
+      id: string;
+      role?: string;
+    };
 
-  if (decoded.role !== "ADMIN") {
-    return res.status(403).json({ error: "Admin only" })
+    if (decoded.role !== "ADMIN") {
+      return res.status(403).json({ error: "Admin only" });
+    }
+
+    req.userId = decoded.id;
+    req.userRole = decoded.role;
+    next();
+  } catch {
+    return res.status(401).json({ message: "Token inválido ou expirado" });
   }
-
-  next()
 }

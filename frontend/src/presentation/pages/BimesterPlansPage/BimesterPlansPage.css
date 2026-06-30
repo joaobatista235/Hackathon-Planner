@@ -1,0 +1,29 @@
+.plans-toolbar { margin-bottom: var(--space-5); }
+.plans-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: var(--space-4); }
+
+.plan-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-plan-accent);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  transition: border-color var(--transition-base), transform var(--transition-base);
+}
+.plan-card:hover { transform: translateY(-2px); }
+.plan-card--done { opacity: 0.7; border-left-color: var(--color-success); }
+
+.plan-card__header { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-3); }
+.plan-card__title  { font-size: var(--text-base); font-weight: 600; color: var(--color-text); }
+.plan-card__class  { font-size: var(--text-xs); color: var(--color-text-muted); display: block; margin-top: 2px; }
+.plan-card__goals  { font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.5; }
+.plan-card__dates  { font-size: var(--text-xs); color: var(--color-text-subtle); }
+
+.plan-card__progress { display: flex; align-items: center; gap: var(--space-3); }
+.plan-card__progress-bar { flex: 1; height: 6px; background: var(--color-surface-2); border-radius: var(--radius-full); overflow: hidden; }
+.plan-card__progress-fill { height: 100%; background: var(--color-plan-accent); border-radius: var(--radius-full); transition: width var(--transition-slow); }
+.plan-card__progress-label { font-size: var(--text-xs); color: var(--color-text-muted); min-width: 32px; text-align: right; }
+
+.plan-card__actions { display: flex; gap: var(--space-2); justify-content: flex-end; border-top: 1px solid var(--color-border-subtle); padding-top: var(--space-3); margin-top: var(--space-1); }

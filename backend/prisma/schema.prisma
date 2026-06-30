@@ -7,6 +7,37 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum AssessmentType {
+  PROVA
+  TRABALHO
+}
+
+enum AssessmentStatus {
+  PENDING
+  DONE
+}
+
+enum AlertPriority {
+  URGENT
+  NEAR
+  OVERDUE
+}
+
+enum AlertStatus {
+  PENDING
+  DONE
+}
+
+enum PlanStatus {
+  DRAFT
+  DONE
+}
+
 model Post {
   id        Int      @id @default(autoincrement())
   title     String
@@ -23,23 +54,27 @@ model User {
   email     String   @unique
   password  String
   createdAt DateTime @default(now())
-  role      String   @default("USER")
+  role      UserRole @default(USER)
 
-  posts     Post[]
-
-  classes   Class[]  @relation("UserClasses")
-  lessons   Lesson[] @relation("UserLessons")
+  posts         Post[]
+  classes       Class[]        @relation("UserClasses")
+  lessons       Lesson[]       @relation("UserLessons")
+  assessments   Assessment[]   @relation("UserAssessments")
+  alerts        Alert[]        @relation("UserAlerts")
+  bimesterPlans BimesterPlan[] @relation("UserBimesterPlans")
 }
 
 model Class {
-  id        String   @id @default(uuid())
-  name      String
-  subject   String
+  id      String @id @default(uuid())
+  name    String
+  subject String
 
-  authorId  String
-  author    User     @relation("UserClasses", fields: [authorId], references: [id])
+  authorId String
+  author   User   @relation("UserClasses", fields: [authorId], references: [id])
 
-  lessons   Lesson[]
+  lessons       Lesson[]
+  assessments   Assessment[]
+  bimesterPlans BimesterPlan[]
 }
 
 model Lesson {
@@ -49,9 +84,55 @@ model Lesson {
   date        DateTime
   createdAt   DateTime @default(now())
 
-  classId     String
-  class       Class    @relation(fields: [classId], references: [id])
+  classId String
+  class   Class  @relation(fields: [classId], references: [id])
 
-  authorId    String
-  author      User     @relation("UserLessons", fields: [authorId], references: [id])
+  authorId String
+  author   User   @relation("UserLessons", fields: [authorId], references: [id])
+}
+
+model Assessment {
+  id          String           @id @default(uuid())
+  title       String
+  description String?
+  type        AssessmentType
+  dueDate     DateTime
+  status      AssessmentStatus @default(PENDING)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  classId  String
+  class    Class  @relation(fields: [classId], references: [id])
+  authorId String
+  author   User   @relation("UserAssessments", fields: [authorId], references: [id])
+}
+
+model Alert {
+  id        String        @id @default(uuid())
+  title     String
+  message   String
+  priority  AlertPriority
+  status    AlertStatus   @default(PENDING)
+  dueDate   DateTime?
+  createdAt DateTime      @default(now())
+
+  authorId String
+  author   User   @relation("UserAlerts", fields: [authorId], references: [id])
+}
+
+model BimesterPlan {
+  id       String     @id @default(uuid())
+  title    String
+  goals    String
+  startsAt DateTime
+  endsAt   DateTime
+  status   PlanStatus @default(DRAFT)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  classId  String
+  class    Class  @relation(fields: [classId], references: [id])
+  authorId String
+  author   User   @relation("UserBimesterPlans", fields: [authorId], references: [id])
 }

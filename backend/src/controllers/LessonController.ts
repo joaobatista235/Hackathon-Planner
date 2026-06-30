@@ -1,64 +1,65 @@
-import {Request, Response} from 'express';
-import lessonService from '@/services/LessonService';
-import { getUserFromToken } from '@/utils/getUserFromToken';
+import type { Request, Response } from "express";
+
+import type { AuthRequest } from "@/middlewares/authenticate";
+import { asyncHandler } from "@/middlewares/asyncHandler";
+import lessonService from "@/services/LessonService";
 
 class LessonController {
-    async getAll(_req: Request, res: Response) {
-        const lessons = await lessonService.getAll();
-        return res.json(lessons);
-    }
+  getAll = asyncHandler(async (_req: Request, res: Response) => {
+    const lessons = await lessonService.getAll();
+    return res.json(lessons);
+  });
 
-    async getById(req: Request, res: Response) {
-        const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-        const lessonData = await lessonService.getById(id);
-        return res.json(lessonData);
-    }
+  getById = asyncHandler(async (req: Request, res: Response) => {
+    const id = req.params.id as string;
+    const lessonData = await lessonService.getById(id);
+    return res.json(lessonData);
+  });
 
-   async create(req: Request, res: Response) {
-    const authorId = getUserFromToken(req);
+  getByClassId = asyncHandler(async (req: Request, res: Response) => {
+    const classId = req.params.classId as string;
+    const lessons = await lessonService.getByLessonId(classId);
+    return res.json(lessons);
+  });
 
-    const { title, description, classId } = req.body;
+  create = asyncHandler(async (req: AuthRequest, res: Response) => {
+    const { title, description, classId, date } = req.body;
 
     const newLesson = await lessonService.create({
-        title,
-        description,
-        date: new Date(),
-
-        class: {
-            connect: {
-                id: classId
-            }
+      title,
+      description,
+      date: date ? new Date(date) : new Date(),
+      class: {
+        connect: {
+          id: classId,
         },
-
-        author: {
-            connect: {
-                id: authorId
-            }
-        }
+      },
+      author: {
+        connect: {
+          id: req.userId!,
+        },
+      },
     });
 
     return res.status(201).json(newLesson);
-}
+  });
 
-    async update(req: Request, res: Response) {
-        const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-        const { title, description } = req.body;
-        const updatedLesson = await lessonService.update(id, { title, description });
-        return res.json(updatedLesson);
-        
-    }
-    async delete(req: Request, res: Response) {
-        const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-        await lessonService.delete(id);
-        return res.status(204).send();
-    }
-    async getByLessonId(req: Request, res: Response) {
-        const classId = Array.isArray(req.params.classId) ? req.params.classId[0] : req.params.classId;
-        const lessons = await lessonService.getByLessonId(classId);
-        return res.json(lessons);
-    }
+  update = asyncHandler(async (req: Request, res: Response) => {
+    const id = req.params.id as string;
+    const { title, description, date } = req.body;
+    const updatedLesson = await lessonService.update(id, {
+      title,
+      description,
+      date: date ? new Date(date) : undefined,
+    });
+    return res.json(updatedLesson);
+  });
 
-
+  delete = asyncHandler(async (req: Request, res: Response) => {
+    const id = req.params.id as string;
+    await lessonService.delete(id);
+    return res.status(204).send();
+  });
 }
 
 export default new LessonController();

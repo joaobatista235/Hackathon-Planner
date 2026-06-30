@@ -1,0 +1,20 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const BimesterPlanController_1 = __importDefault(require("@/controllers/BimesterPlanController"));
+const authenticate_1 = require("@/middlewares/authenticate");
+const validate_1 = require("@/middlewares/validate");
+const bimester_plan_schema_1 = require("@/schemas/bimester-plan.schema");
+const router = (0, express_1.Router)();
+router.use(authenticate_1.authenticate);
+router.get("/", BimesterPlanController_1.default.getAll);
+router.get("/class/:classId", BimesterPlanController_1.default.getByClassId);
+router.get("/:id", BimesterPlanController_1.default.getById);
+router.post("/", (0, validate_1.validate)(bimester_plan_schema_1.createBimesterPlanSchema), BimesterPlanController_1.default.create);
+router.put("/:id", (0, validate_1.validate)(bimester_plan_schema_1.updateBimesterPlanSchema), BimesterPlanController_1.default.update);
+router.patch("/:id/complete", BimesterPlanController_1.default.complete);
+router.delete("/:id", BimesterPlanController_1.default.delete);
+exports.default = router;

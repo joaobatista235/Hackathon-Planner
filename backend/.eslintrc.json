@@ -8,37 +8,45 @@
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": "latest",
-    "project": "./tsconfig.json"
+    "project": "./tsconfig.json",
+    "tsconfigRootDir": "__dirname"
   },
-  "plugins": [
-    "@typescript-eslint",
-    "import",
-    "n",
-    "promise",
-    "prettier"
-  ],
+  "plugins": ["@typescript-eslint", "import", "promise", "prettier"],
   "extends": [
-    "standard-with-typescript",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
     "plugin:import/recommended",
     "plugin:promise/recommended",
     "plugin:prettier/recommended"
   ],
   "rules": {
-    "prettier/prettier": "error",
-
+    "prettier/prettier": ["error", { "endOfLine": "auto" }],
     "import/order": [
       "error",
       {
-        "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index"
+        ],
         "newlines-between": "always"
       }
     ],
-
     "@typescript-eslint/no-unused-vars": [
       "warn",
       { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
     ],
-
     "@typescript-eslint/consistent-type-imports": "error"
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        "project": "./tsconfig.json",
+        "tsconfigRootDir": "__dirname"
+      }
+    }
   }
 }

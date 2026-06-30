@@ -1,0 +1,29 @@
+.assessments-toolbar { display: flex; gap: var(--space-3); margin-bottom: var(--space-5); flex-wrap: wrap; }
+.assessments-list { display: flex; flex-direction: column; gap: var(--space-3); }
+
+.assessment-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  transition: border-color var(--transition-fast);
+}
+
+.assessment-row:hover { border-color: var(--color-border); }
+.assessment-row--done { opacity: 0.65; }
+
+.assessment-row__accent { width: 3px; align-self: stretch; min-height: 36px; border-radius: 2px; flex-shrink: 0; }
+.assessment-row--prova    .assessment-row__accent { background: var(--color-assessment-accent); }
+.assessment-row--trabalho .assessment-row__accent { background: var(--color-work-accent); }
+.assessment-row--done     .assessment-row__accent { background: var(--color-success); }
+
+.assessment-row__content { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.assessment-row__title { font-size: var(--text-base); font-weight: 600; color: var(--color-text); }
+.assessment-row__meta  { font-size: var(--text-xs); color: var(--color-text-muted); }
+.assessment-row__desc  { font-size: var(--text-sm); color: var(--color-text-subtle); max-width: 360px; }
+
+.assessment-row__badges { display: flex; gap: var(--space-2); flex-shrink: 0; }
+.assessment-row__actions { display: flex; gap: var(--space-2); flex-shrink: 0; }
