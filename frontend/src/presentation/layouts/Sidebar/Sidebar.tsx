@@ -1,15 +1,16 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/application/context/AuthContext';
+import { Icon, type IconName } from '@/presentation/components/base/Icon/Icon';
 import './Sidebar.css';
 
-const NAV_ITEMS = [
-  { to: '/dashboard',     label: 'Dashboard',     icon: '⊞' },
-  { to: '/classes',       label: 'Turmas',         icon: '🏫' },
-  { to: '/lessons',       label: 'Aulas',          icon: '📖' },
-  { to: '/calendar',      label: 'Calendário',     icon: '📅' },
-  { to: '/assessments',   label: 'Avaliações',     icon: '📝' },
-  { to: '/alerts',        label: 'Alertas',        icon: '🔔' },
-  { to: '/bimester-plans',label: 'Planejamento',   icon: '📊' },
+const NAV_ITEMS: { to: string; label: string; icon: IconName }[] = [
+  { to: '/dashboard',      label: 'Dashboard',    icon: 'grid' },
+  { to: '/classes',        label: 'Turmas',        icon: 'school' },
+  { to: '/lessons',        label: 'Aulas',         icon: 'book-open' },
+  { to: '/calendar',       label: 'Calendário',    icon: 'calendar' },
+  { to: '/assessments',    label: 'Avaliações',    icon: 'clipboard' },
+  { to: '/alerts',         label: 'Alertas',       icon: 'bell' },
+  { to: '/bimester-plans', label: 'Planejamento',  icon: 'bar-chart' },
 ];
 
 export function Sidebar() {
@@ -21,10 +22,17 @@ export function Sidebar() {
     navigate('/login');
   };
 
+  const initials = user?.name
+    ?.split(' ')
+    .slice(0, 2)
+    .map((n) => n[0])
+    .join('')
+    .toUpperCase() ?? 'U';
+
   return (
     <aside className="sidebar">
       <div className="sidebar__brand">
-        <span className="sidebar__brand-icon">🎓</span>
+        <span className="sidebar__brand-mark" aria-hidden="true" />
         <span className="sidebar__brand-name">Planner</span>
       </div>
 
@@ -37,7 +45,7 @@ export function Sidebar() {
               `sidebar__item ${isActive ? 'sidebar__item--active' : ''}`
             }
           >
-            <span className="sidebar__item-icon" aria-hidden="true">{item.icon}</span>
+            <Icon name={item.icon} size={16} />
             <span className="sidebar__item-label">{item.label}</span>
           </NavLink>
         ))}
@@ -45,18 +53,21 @@ export function Sidebar() {
 
       <div className="sidebar__footer">
         <div className="sidebar__user">
-          <div className="sidebar__avatar" aria-hidden="true">
-            {user?.name?.[0]?.toUpperCase() ?? 'U'}
-          </div>
+          <div className="sidebar__avatar" aria-hidden="true">{initials}</div>
           <div className="sidebar__user-info">
             <span className="sidebar__user-name truncate">{user?.name}</span>
-            <span className="sidebar__user-role">{user?.role === 'ADMIN' ? 'Admin' : 'Professor'}</span>
+            <span className="sidebar__user-role">
+              {user?.role === 'ADMIN' ? 'Administrador' : 'Professor'}
+            </span>
           </div>
         </div>
-        <button className="sidebar__logout" onClick={handleLogout} title="Sair" aria-label="Sair">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
-          </svg>
+        <button
+          className="sidebar__logout"
+          onClick={handleLogout}
+          title="Sair"
+          aria-label="Sair da conta"
+        >
+          <Icon name="log-out" size={15} />
         </button>
       </div>
     </aside>

@@ -6,6 +6,7 @@ import { Input } from '@/presentation/components/base/Input/Input';
 import { Select } from '@/presentation/components/base/Select/Select';
 import { Modal, ModalActions } from '@/presentation/components/base/Modal/Modal';
 import { EmptyState } from '@/presentation/components/base/EmptyState/EmptyState';
+import { Icon } from '@/presentation/components/base/Icon/Icon';
 import type { Lesson } from '@/domain/types';
 import './LessonsPage.css';
 
@@ -22,6 +23,7 @@ export function LessonsPage() {
   const [confirmDelete, setConfirmDelete] = useState<Lesson | null>(null);
 
   const classOptions = classes.map((c) => ({ value: c.id, label: `${c.name} — ${c.subject}` }));
+  const today = new Date().toISOString().split('T')[0];
 
   const openCreate = () => {
     setEditTarget(null);
@@ -65,8 +67,6 @@ export function LessonsPage() {
     setConfirmDelete(null);
   };
 
-  const today = new Date().toISOString().split('T')[0];
-
   function lessonStatus(lesson: Lesson) {
     const d = lesson.date.split('T')[0];
     if (d === today) return 'today';
@@ -81,7 +81,10 @@ export function LessonsPage() {
           <h1>Aulas</h1>
           <p>Registre e acompanhe suas aulas por turma</p>
         </div>
-        <Button id="create-lesson-btn" onClick={openCreate} variant="primary">+ Nova aula</Button>
+        <Button id="create-lesson-btn" onClick={openCreate} variant="primary">
+          <Icon name="plus" size={14} />
+          Nova aula
+        </Button>
       </div>
 
       <div className="page-content">
@@ -100,10 +103,10 @@ export function LessonsPage() {
           </div>
         )}
 
-        {!loading && error && <EmptyState icon="⚠️" title="Erro ao carregar aulas" description={error} />}
+        {!loading && error && <EmptyState icon="alert-triangle" title="Erro ao carregar aulas" description={error} />}
 
         {!loading && !error && lessons.length === 0 && (
-          <EmptyState icon="📖" title="Nenhuma aula encontrada"
+          <EmptyState icon="book-open" title="Nenhuma aula encontrada"
             action={<Button onClick={openCreate}>Criar aula</Button>}
           />
         )}
@@ -126,8 +129,12 @@ export function LessonsPage() {
                   </div>
                   {status === 'today' && <span className="lesson-row__badge lesson-row__badge--today">Hoje</span>}
                   <div className="lesson-row__actions">
-                    <Button variant="ghost" size="sm" onClick={() => openEdit(lesson)}>Editar</Button>
-                    <Button variant="danger" size="sm" onClick={() => setConfirmDelete(lesson)}>✕</Button>
+                    <button className="icon-btn" onClick={() => openEdit(lesson)} title="Editar">
+                      <Icon name="pencil" size={14} />
+                    </button>
+                    <button className="icon-btn icon-btn--danger" onClick={() => setConfirmDelete(lesson)} title="Excluir">
+                      <Icon name="trash" size={14} />
+                    </button>
                   </div>
                 </div>
               );
@@ -141,7 +148,7 @@ export function LessonsPage() {
       >
         <form id="lesson-form" onSubmit={handleSubmit} className="modal-form">
           <Input id="lesson-title" label="Título" placeholder="Ex: Introdução à álgebra" value={form.title} onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))} required />
-          <Input id="lesson-desc" label="Descrição" placeholder="Conteúdo da aula..." value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} />
+          <Input id="lesson-desc" label="Descrição" placeholder="Conteúdo da aula…" value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} />
           <Input id="lesson-date" label="Data" type="date" value={form.date} onChange={(e) => setForm((f) => ({ ...f, date: e.target.value }))} required />
           <Select id="lesson-class" label="Turma" options={classOptions} placeholder="Selecione a turma" value={form.classId} onChange={(e) => setForm((f) => ({ ...f, classId: e.target.value }))} required />
         </form>
@@ -150,9 +157,7 @@ export function LessonsPage() {
       <Modal open={!!confirmDelete} onClose={() => setConfirmDelete(null)} title="Excluir aula" size="sm"
         footer={<ModalActions onCancel={() => setConfirmDelete(null)} onConfirm={handleDelete} confirmLabel="Excluir" danger />}
       >
-        <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>
-          Excluir a aula <strong style={{ color: 'var(--color-text)' }}>{confirmDelete?.title}</strong>?
-        </p>
+        <p className="confirm-text">Excluir a aula <strong>{confirmDelete?.title}</strong>?</p>
       </Modal>
     </div>
   );

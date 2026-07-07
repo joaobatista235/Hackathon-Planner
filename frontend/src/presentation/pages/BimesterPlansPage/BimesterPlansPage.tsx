@@ -7,6 +7,7 @@ import { Select } from '@/presentation/components/base/Select/Select';
 import { Modal, ModalActions } from '@/presentation/components/base/Modal/Modal';
 import { EmptyState } from '@/presentation/components/base/EmptyState/EmptyState';
 import { PlanStatusBadge } from '@/presentation/components/base/Badge/Badge';
+import { Icon } from '@/presentation/components/base/Icon/Icon';
 import type { BimesterPlan } from '@/domain/types';
 import './BimesterPlansPage.css';
 
@@ -36,8 +37,7 @@ export function BimesterPlansPage() {
     setShowModal(true);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSave = async () => {
     setSaving(true);
     try {
       const data = { ...form, startsAt: new Date(form.startsAt).toISOString(), endsAt: new Date(form.endsAt).toISOString() };
@@ -47,6 +47,11 @@ export function BimesterPlansPage() {
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await handleSave();
   };
 
   function getProgress(p: BimesterPlan) {
@@ -65,7 +70,10 @@ export function BimesterPlansPage() {
           <h1>Planejamento Bimestral</h1>
           <p>Organize objetivos e progresso por turma</p>
         </div>
-        <Button id="create-plan-btn" onClick={openCreate} variant="primary">+ Novo planejamento</Button>
+        <Button id="create-plan-btn" onClick={openCreate} variant="primary">
+          <Icon name="plus" size={14} />
+          Novo planejamento
+        </Button>
       </div>
 
       <div className="page-content">
@@ -74,8 +82,10 @@ export function BimesterPlansPage() {
         </div>
 
         {loading && <div className="skeleton-list">{[1,2,3].map(i => <div key={i} className="skeleton-item" style={{ height: 120 }} />)}</div>}
-        {!loading && error && <EmptyState icon="⚠️" title={error} />}
-        {!loading && !error && plans.length === 0 && <EmptyState icon="📊" title="Nenhum planejamento" action={<Button onClick={openCreate}>Criar planejamento</Button>} />}
+        {!loading && error && <EmptyState icon="alert-triangle" title={error} />}
+        {!loading && !error && plans.length === 0 && (
+          <EmptyState icon="bar-chart" title="Nenhum planejamento" action={<Button onClick={openCreate}>Criar planejamento</Button>} />
+        )}
 
         {!loading && !error && plans.length > 0 && (
           <div className="plans-grid">
@@ -92,7 +102,8 @@ export function BimesterPlansPage() {
                   </div>
                   <p className="plan-card__goals">{plan.goals}</p>
                   <div className="plan-card__dates tabular-nums">
-                    <span>{new Date(plan.startsAt).toLocaleDateString('pt-BR')} → {new Date(plan.endsAt).toLocaleDateString('pt-BR')}</span>
+                    <Icon name="calendar" size={12} />
+                    <span>{new Date(plan.startsAt).toLocaleDateString('pt-BR')} – {new Date(plan.endsAt).toLocaleDateString('pt-BR')}</span>
                   </div>
                   <div className="plan-card__progress">
                     <div className="plan-card__progress-bar">
@@ -101,9 +112,17 @@ export function BimesterPlansPage() {
                     <span className="plan-card__progress-label tabular-nums">{progress}%</span>
                   </div>
                   <div className="plan-card__actions">
-                    {plan.status === 'DRAFT' && <Button variant="ghost" size="sm" onClick={() => completePlan(plan.id)}>✓ Concluir</Button>}
-                    <Button variant="ghost" size="sm" onClick={() => openEdit(plan)}>Editar</Button>
-                    <Button variant="danger" size="sm" onClick={() => setConfirmDelete(plan)}>✕</Button>
+                    {plan.status === 'DRAFT' && (
+                      <button className="icon-btn" onClick={() => completePlan(plan.id)} title="Concluir">
+                        <Icon name="check" size={14} />
+                      </button>
+                    )}
+                    <button className="icon-btn" onClick={() => openEdit(plan)} title="Editar">
+                      <Icon name="pencil" size={14} />
+                    </button>
+                    <button className="icon-btn icon-btn--danger" onClick={() => setConfirmDelete(plan)} title="Excluir">
+                      <Icon name="trash" size={14} />
+                    </button>
                   </div>
                 </div>
               );
@@ -113,11 +132,11 @@ export function BimesterPlansPage() {
       </div>
 
       <Modal open={showModal} onClose={() => setShowModal(false)} title={editTarget ? 'Editar planejamento' : 'Novo planejamento'} size="lg"
-        footer={<ModalActions onCancel={() => setShowModal(false)} onConfirm={handleSubmit as () => void} confirmLabel={editTarget ? 'Salvar' : 'Criar'} loading={saving} />}
+        footer={<ModalActions onCancel={() => setShowModal(false)} onConfirm={handleSave} confirmLabel={editTarget ? 'Salvar' : 'Criar'} loading={saving} />}
       >
         <form id="plan-form" onSubmit={handleSubmit} className="modal-form">
           <Input id="plan-title" label="Título" placeholder="Ex: 1º Bimestre 2025" value={form.title} onChange={(e) => setForm(f => ({ ...f, title: e.target.value }))} required />
-          <Input id="plan-goals" label="Objetivos" placeholder="Descreva os objetivos do período..." value={form.goals} onChange={(e) => setForm(f => ({ ...f, goals: e.target.value }))} required />
+          <Input id="plan-goals" label="Objetivos" placeholder="Descreva os objetivos do período…" value={form.goals} onChange={(e) => setForm(f => ({ ...f, goals: e.target.value }))} required />
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)' }}>
             <Input id="plan-start" label="Início" type="date" value={form.startsAt} onChange={(e) => setForm(f => ({ ...f, startsAt: e.target.value }))} required />
             <Input id="plan-end" label="Término" type="date" value={form.endsAt} onChange={(e) => setForm(f => ({ ...f, endsAt: e.target.value }))} required />
@@ -129,7 +148,7 @@ export function BimesterPlansPage() {
       <Modal open={!!confirmDelete} onClose={() => setConfirmDelete(null)} title="Excluir planejamento" size="sm"
         footer={<ModalActions onCancel={() => setConfirmDelete(null)} onConfirm={async () => { if (confirmDelete) { await deletePlan(confirmDelete.id); setConfirmDelete(null); }}} confirmLabel="Excluir" danger />}
       >
-        <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>Excluir <strong style={{ color: 'var(--color-text)' }}>{confirmDelete?.title}</strong>?</p>
+        <p className="confirm-text">Excluir <strong>{confirmDelete?.title}</strong>?</p>
       </Modal>
     </div>
   );

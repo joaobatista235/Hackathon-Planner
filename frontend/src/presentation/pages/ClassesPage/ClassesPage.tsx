@@ -4,6 +4,7 @@ import { Button } from '@/presentation/components/base/Button/Button';
 import { Input } from '@/presentation/components/base/Input/Input';
 import { Modal, ModalActions } from '@/presentation/components/base/Modal/Modal';
 import { EmptyState } from '@/presentation/components/base/EmptyState/EmptyState';
+import { Icon } from '@/presentation/components/base/Icon/Icon';
 import type { Class } from '@/domain/types';
 import './ClassesPage.css';
 
@@ -69,18 +70,22 @@ export function ClassesPage() {
           <p>Gerencie suas turmas e disciplinas</p>
         </div>
         <Button id="create-class-btn" onClick={openCreate} variant="primary">
-          + Nova turma
+          <Icon name="plus" size={14} />
+          Nova turma
         </Button>
       </div>
 
       <div className="page-content">
         <div className="classes-toolbar">
-          <Input
-            placeholder="Buscar por nome ou disciplina..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            style={{ maxWidth: 320 }}
-          />
+          <div className="search-wrap">
+            <Icon name="search" size={14} className="search-wrap__icon" />
+            <Input
+              placeholder="Buscar por nome ou disciplina…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="search-wrap__input"
+            />
+          </div>
         </div>
 
         {loading && (
@@ -90,12 +95,12 @@ export function ClassesPage() {
         )}
 
         {!loading && error && (
-          <EmptyState icon="⚠️" title="Erro ao carregar turmas" description={error} />
+          <EmptyState icon="alert-triangle" title="Erro ao carregar turmas" description={error} />
         )}
 
         {!loading && !error && filtered.length === 0 && (
           <EmptyState
-            icon="🏫"
+            icon="school"
             title="Nenhuma turma encontrada"
             description={search ? 'Tente outro termo de busca.' : 'Crie sua primeira turma para começar.'}
             action={!search ? <Button onClick={openCreate}>Criar turma</Button> : undefined}
@@ -107,23 +112,26 @@ export function ClassesPage() {
             {filtered.map((cls) => (
               <div key={cls.id} className="class-card">
                 <div className="class-card__header">
-                  <div>
-                    <h3 className="class-card__name">{cls.name}</h3>
-                    <span className="class-card__subject">{cls.subject}</span>
+                  <div className="class-card__icon-wrap">
+                    <Icon name="school" size={18} />
                   </div>
-                  <span className="class-card__icon" aria-hidden="true">🏫</span>
+                  <div className="class-card__actions">
+                    <button className="icon-btn" onClick={() => openEdit(cls)} title="Editar">
+                      <Icon name="pencil" size={14} />
+                    </button>
+                    <button className="icon-btn icon-btn--danger" onClick={() => setConfirmDelete(cls)} title="Excluir">
+                      <Icon name="trash" size={14} />
+                    </button>
+                  </div>
                 </div>
-                <div className="class-card__actions">
-                  <Button variant="ghost" size="sm" onClick={() => openEdit(cls)}>Editar</Button>
-                  <Button variant="danger" size="sm" onClick={() => setConfirmDelete(cls)}>Excluir</Button>
-                </div>
+                <h3 className="class-card__name">{cls.name}</h3>
+                <span className="class-card__subject">{cls.subject}</span>
               </div>
             ))}
           </div>
         )}
       </div>
 
-      {/* Create/Edit Modal */}
       <Modal
         open={showModal}
         onClose={() => setShowModal(false)}
@@ -157,7 +165,6 @@ export function ClassesPage() {
         </form>
       </Modal>
 
-      {/* Confirm Delete */}
       <Modal
         open={!!confirmDelete}
         onClose={() => setConfirmDelete(null)}
@@ -172,8 +179,9 @@ export function ClassesPage() {
           />
         }
       >
-        <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>
-          Tem certeza que deseja excluir a turma <strong style={{ color: 'var(--color-text)' }}>{confirmDelete?.name}</strong>?
+        <p className="confirm-text">
+          Deseja excluir a turma{' '}
+          <strong>{confirmDelete?.name}</strong>?
           Esta ação não pode ser desfeita.
         </p>
       </Modal>

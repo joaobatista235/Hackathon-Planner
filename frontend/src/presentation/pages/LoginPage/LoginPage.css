@@ -6,45 +6,18 @@
   justify-content: center;
   padding: var(--space-4);
   position: relative;
-  overflow: hidden;
 }
 
-.login-page__bg {
+/* Subtle noise texture overlay */
+.login-page__noise {
   position: absolute;
   inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
   pointer-events: none;
+  opacity: 0.5;
 }
 
-.login-page__orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.12;
-  animation: orb-pulse 8s ease-in-out infinite;
-}
-
-.login-page__orb--1 {
-  width: 500px;
-  height: 500px;
-  background: var(--color-primary);
-  top: -100px;
-  left: -100px;
-}
-
-.login-page__orb--2 {
-  width: 400px;
-  height: 400px;
-  background: var(--color-info);
-  bottom: -80px;
-  right: -80px;
-  animation-delay: 4s;
-}
-
-@keyframes orb-pulse {
-  0%, 100% { transform: scale(1); }
-  50%       { transform: scale(1.15); }
-}
-
+/* Card */
 .login-card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -55,36 +28,45 @@
   position: relative;
   z-index: 1;
   box-shadow: var(--shadow-lg);
-  animation: card-in 0.4s ease;
+  animation: card-in 0.35s ease;
 }
 
 @keyframes card-in {
-  from { opacity: 0; transform: translateY(16px); }
+  from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-.login-card__brand {
-  text-align: center;
+/* Header */
+.login-card__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
   margin-bottom: var(--space-8);
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid var(--color-border-subtle);
 }
 
-.login-card__brand-icon {
-  font-size: 40px;
-  display: block;
-  margin-bottom: var(--space-3);
+.login-card__logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--color-primary);
+  flex-shrink: 0;
 }
 
-.login-card__brand-name {
-  font-size: var(--text-3xl);
+.login-card__title {
+  font-size: var(--text-xl);
   font-weight: 700;
   color: var(--color-text);
   letter-spacing: -0.03em;
-  margin-bottom: var(--space-1);
+  line-height: 1.1;
 }
 
-.login-card__brand-sub {
-  font-size: var(--text-sm);
+.login-card__subtitle {
+  font-size: var(--text-xs);
   color: var(--color-text-subtle);
+  margin-top: 2px;
+  line-height: 1.4;
 }
 
 .login-card__form {
@@ -96,9 +78,8 @@
 .login-card__error {
   font-size: var(--text-sm);
   color: var(--color-danger);
-  background: rgba(251, 113, 133, 0.08);
-  border: 1px solid rgba(251, 113, 133, 0.2);
+  background: rgba(251, 113, 133, 0.06);
+  border: 1px solid rgba(251, 113, 133, 0.18);
   border-radius: var(--radius-md);
   padding: var(--space-3) var(--space-4);
-  text-align: center;
 }
