@@ -33,16 +33,15 @@ export function LoginPage() {
 
   return (
     <div className="login-page">
-      <div className="login-page__bg" aria-hidden="true">
-        <div className="login-page__orb login-page__orb--1" />
-        <div className="login-page__orb login-page__orb--2" />
-      </div>
+      <div className="login-page__noise" aria-hidden="true" />
 
       <div className="login-card">
-        <div className="login-card__brand">
-          <span className="login-card__brand-icon">🎓</span>
-          <h1 className="login-card__brand-name">Planner</h1>
-          <p className="login-card__brand-sub">Organização Escolar para Professores</p>
+        <div className="login-card__header">
+          <div className="login-card__logo" aria-hidden="true" />
+          <div>
+            <h1 className="login-card__title">Planner</h1>
+            <p className="login-card__subtitle">Organização escolar para professores</p>
+          </div>
         </div>
 
         <form className="login-card__form" onSubmit={handleSubmit} noValidate>
@@ -50,7 +49,7 @@ export function LoginPage() {
             id="login-email"
             label="Email"
             type="email"
-            placeholder="seu@email.com"
+            placeholder="professor@escola.edu.br"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             autoComplete="email"
@@ -77,7 +76,7 @@ export function LoginPage() {
             variant="primary"
             size="lg"
             loading={loading}
-            style={{ width: '100%' }}
+            style={{ width: '100%', marginTop: 'var(--space-2)' }}
           >
             Entrar
           </Button>

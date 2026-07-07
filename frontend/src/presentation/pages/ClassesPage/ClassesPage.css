@@ -2,9 +2,29 @@
   margin-bottom: var(--space-5);
 }
 
+/* Search with icon */
+.search-wrap {
+  position: relative;
+  max-width: 320px;
+}
+
+.search-wrap__icon {
+  position: absolute;
+  left: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-subtle);
+  pointer-events: none;
+}
+
+.search-wrap__input .field__input {
+  padding-left: calc(var(--space-3) + 14px + var(--space-2));
+}
+
+/* Card grid */
 .classes-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: var(--space-4);
 }
 
@@ -15,19 +35,42 @@
   padding: var(--space-5);
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
-  transition: border-color var(--transition-base), transform var(--transition-base);
+  gap: var(--space-3);
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
 }
 
 .class-card:hover {
   border-color: var(--color-primary);
-  transform: translateY(-2px);
+  box-shadow: 0 0 0 1px var(--color-primary-dim);
 }
 
 .class-card__header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
+}
+
+.class-card__icon-wrap {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+}
+
+.class-card__actions {
+  display: flex;
+  gap: var(--space-1);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.class-card:hover .class-card__actions {
+  opacity: 1;
 }
 
 .class-card__name {
@@ -39,23 +82,12 @@
 .class-card__subject {
   font-size: var(--text-sm);
   color: var(--color-text-muted);
-  display: block;
-  margin-top: var(--space-1);
 }
 
-.class-card__icon {
-  font-size: 24px;
-  opacity: 0.5;
-}
-
-.class-card__actions {
-  display: flex;
-  gap: var(--space-2);
-  justify-content: flex-end;
-}
-
+/* Modal shared */
 .modal-form {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
 }
+

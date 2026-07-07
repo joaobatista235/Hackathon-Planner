@@ -7,6 +7,7 @@ import { Select } from '@/presentation/components/base/Select/Select';
 import { Modal, ModalActions } from '@/presentation/components/base/Modal/Modal';
 import { EmptyState } from '@/presentation/components/base/EmptyState/EmptyState';
 import { AssessmentTypeBadge, AssessmentStatusBadge } from '@/presentation/components/base/Badge/Badge';
+import { Icon } from '@/presentation/components/base/Icon/Icon';
 import type { Assessment } from '@/domain/types';
 import './AssessmentsPage.css';
 
@@ -24,10 +25,7 @@ export function AssessmentsPage() {
   const [confirmDelete, setConfirmDelete] = useState<Assessment | null>(null);
 
   const classOptions = classes.map((c) => ({ value: c.id, label: `${c.name} — ${c.subject}` }));
-
-  const filtered = filterStatus
-    ? assessments.filter((a) => a.status === filterStatus)
-    : assessments;
+  const filtered = filterStatus ? assessments.filter((a) => a.status === filterStatus) : assessments;
 
   const openCreate = () => {
     setEditTarget(null);
@@ -72,7 +70,10 @@ export function AssessmentsPage() {
           <h1>Avaliações</h1>
           <p>Provas e trabalhos por turma</p>
         </div>
-        <Button id="create-assessment-btn" onClick={openCreate} variant="primary">+ Nova avaliação</Button>
+        <Button id="create-assessment-btn" onClick={openCreate} variant="primary">
+          <Icon name="plus" size={14} />
+          Nova avaliação
+        </Button>
       </div>
 
       <div className="page-content">
@@ -82,8 +83,10 @@ export function AssessmentsPage() {
         </div>
 
         {loading && <div className="skeleton-list">{[1,2,3].map(i => <div key={i} className="skeleton-item" style={{ height: 80 }} />)}</div>}
-        {!loading && error && <EmptyState icon="⚠️" title="Erro ao carregar avaliações" description={error} />}
-        {!loading && !error && filtered.length === 0 && <EmptyState icon="📝" title="Nenhuma avaliação" action={<Button onClick={openCreate}>Criar avaliação</Button>} />}
+        {!loading && error && <EmptyState icon="alert-triangle" title="Erro ao carregar avaliações" description={error} />}
+        {!loading && !error && filtered.length === 0 && (
+          <EmptyState icon="clipboard" title="Nenhuma avaliação" action={<Button onClick={openCreate}>Criar avaliação</Button>} />
+        )}
 
         {!loading && !error && filtered.length > 0 && (
           <div className="assessments-list">
@@ -100,9 +103,19 @@ export function AssessmentsPage() {
                   <AssessmentStatusBadge status={a.status} />
                 </div>
                 <div className="assessment-row__actions">
-                  <Button variant="ghost" size="sm" onClick={() => toggleDone(a)}>{a.status === 'DONE' ? 'Reabrir' : 'Concluir'}</Button>
-                  <Button variant="ghost" size="sm" onClick={() => openEdit(a)}>Editar</Button>
-                  <Button variant="danger" size="sm" onClick={() => setConfirmDelete(a)}>✕</Button>
+                  <button
+                    className="icon-btn"
+                    onClick={() => toggleDone(a)}
+                    title={a.status === 'DONE' ? 'Reabrir' : 'Concluir'}
+                  >
+                    <Icon name="check" size={14} />
+                  </button>
+                  <button className="icon-btn" onClick={() => openEdit(a)} title="Editar">
+                    <Icon name="pencil" size={14} />
+                  </button>
+                  <button className="icon-btn icon-btn--danger" onClick={() => setConfirmDelete(a)} title="Excluir">
+                    <Icon name="trash" size={14} />
+                  </button>
                 </div>
               </div>
             ))}
@@ -115,9 +128,9 @@ export function AssessmentsPage() {
       >
         <form id="assessment-form" onSubmit={handleSubmit} className="modal-form">
           <Input id="ass-title" label="Título" placeholder="Ex: Prova de Álgebra" value={form.title} onChange={(e) => setForm(f => ({ ...f, title: e.target.value }))} required />
-          <Input id="ass-desc" label="Observações" placeholder="Opcional..." value={form.description} onChange={(e) => setForm(f => ({ ...f, description: e.target.value }))} />
+          <Input id="ass-desc" label="Observações" placeholder="Opcional…" value={form.description} onChange={(e) => setForm(f => ({ ...f, description: e.target.value }))} />
           <Select id="ass-type" label="Tipo" options={[{ value: 'PROVA', label: 'Prova' }, { value: 'TRABALHO', label: 'Trabalho' }]} value={form.type} onChange={(e) => setForm(f => ({ ...f, type: e.target.value }))} />
-          <Input id="ass-date" label="Data de entrega / aplicação" type="date" value={form.dueDate} onChange={(e) => setForm(f => ({ ...f, dueDate: e.target.value }))} required />
+          <Input id="ass-date" label="Data de entrega" type="date" value={form.dueDate} onChange={(e) => setForm(f => ({ ...f, dueDate: e.target.value }))} required />
           <Select id="ass-class" label="Turma" options={classOptions} placeholder="Selecione a turma" value={form.classId} onChange={(e) => setForm(f => ({ ...f, classId: e.target.value }))} required />
         </form>
       </Modal>
@@ -125,7 +138,7 @@ export function AssessmentsPage() {
       <Modal open={!!confirmDelete} onClose={() => setConfirmDelete(null)} title="Excluir avaliação" size="sm"
         footer={<ModalActions onCancel={() => setConfirmDelete(null)} onConfirm={async () => { if (confirmDelete) { await deleteAssessment(confirmDelete.id); setConfirmDelete(null); }}} confirmLabel="Excluir" danger />}
       >
-        <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>Excluir <strong style={{ color: 'var(--color-text)' }}>{confirmDelete?.title}</strong>?</p>
+        <p className="confirm-text">Excluir <strong>{confirmDelete?.title}</strong>?</p>
       </Modal>
     </div>
   );

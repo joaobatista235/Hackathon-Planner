@@ -9,10 +9,16 @@
   min-height: 200px;
 }
 
-.empty-state__icon {
-  font-size: 36px;
-  line-height: 1;
-  opacity: 0.6;
+.empty-state__icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-subtle);
 }
 
 .empty-state__title {
@@ -30,3 +36,4 @@
 .empty-state__action {
   margin-top: var(--space-2);
 }
+

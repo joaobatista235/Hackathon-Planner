@@ -18,7 +18,10 @@ app.use((0, cors_1.default)({
         "http://localhost:3000",
         "http://localhost:3001",
         "http://localhost:3002",
+        "http://localhost:5173",
+        "http://localhost:4173",
     ],
+    credentials: true,
 }));
 app.use(express_1.default.json());
 app.use("/api", routes_1.default);

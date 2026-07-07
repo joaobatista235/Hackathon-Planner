@@ -6,6 +6,7 @@ import { Select } from '@/presentation/components/base/Select/Select';
 import { Modal, ModalActions } from '@/presentation/components/base/Modal/Modal';
 import { EmptyState } from '@/presentation/components/base/EmptyState/EmptyState';
 import { AlertPriorityBadge, AlertStatusBadge } from '@/presentation/components/base/Badge/Badge';
+import { Icon } from '@/presentation/components/base/Icon/Icon';
 import type { Alert } from '@/domain/types';
 import './AlertsPage.css';
 
@@ -49,7 +50,10 @@ export function AlertsPage() {
           <h1>Alertas</h1>
           <p>Acompanhe alertas manuais e automáticos</p>
         </div>
-        <Button id="create-alert-btn" onClick={() => setShowModal(true)} variant="primary">+ Novo alerta</Button>
+        <Button id="create-alert-btn" onClick={() => setShowModal(true)} variant="primary">
+          <Icon name="plus" size={14} />
+          Novo alerta
+        </Button>
       </div>
 
       <div className="page-content">
@@ -63,8 +67,10 @@ export function AlertsPage() {
         </div>
 
         {loading && <div className="skeleton-list">{[1,2,3].map(i => <div key={i} className="skeleton-item" style={{ height: 76 }} />)}</div>}
-        {!loading && error && <EmptyState icon="⚠️" title={error} />}
-        {!loading && !error && filtered.length === 0 && <EmptyState icon="🔔" title="Nenhum alerta" action={<Button onClick={() => setShowModal(true)}>Criar alerta</Button>} />}
+        {!loading && error && <EmptyState icon="alert-triangle" title={error} />}
+        {!loading && !error && filtered.length === 0 && (
+          <EmptyState icon="bell" title="Nenhum alerta" action={<Button onClick={() => setShowModal(true)}>Criar alerta</Button>} />
+        )}
 
         {!loading && !error && filtered.length > 0 && (
           <div className="alerts-list">
@@ -74,7 +80,11 @@ export function AlertsPage() {
                 <div className="alert-row__content">
                   <span className="alert-row__title">{alert.title}</span>
                   <span className="alert-row__message">{alert.message}</span>
-                  {alert.dueDate && <span className="alert-row__date tabular-nums">Vence: {new Date(alert.dueDate).toLocaleDateString('pt-BR')}</span>}
+                  {alert.dueDate && (
+                    <span className="alert-row__date tabular-nums">
+                      Vence: {new Date(alert.dueDate).toLocaleDateString('pt-BR')}
+                    </span>
+                  )}
                 </div>
                 <div className="alert-row__badges">
                   <AlertPriorityBadge priority={alert.priority} />
@@ -82,9 +92,13 @@ export function AlertsPage() {
                 </div>
                 <div className="alert-row__actions">
                   {alert.status === 'PENDING' && (
-                    <Button variant="ghost" size="sm" onClick={() => completeAlert(alert.id)}>✓ Concluir</Button>
+                    <button className="icon-btn" onClick={() => completeAlert(alert.id)} title="Concluir">
+                      <Icon name="check" size={14} />
+                    </button>
                   )}
-                  <Button variant="danger" size="sm" onClick={() => setConfirmDelete(alert)}>✕</Button>
+                  <button className="icon-btn icon-btn--danger" onClick={() => setConfirmDelete(alert)} title="Excluir">
+                    <Icon name="trash" size={14} />
+                  </button>
                 </div>
               </div>
             ))}
@@ -97,8 +111,8 @@ export function AlertsPage() {
       >
         <form id="alert-form" onSubmit={handleSubmit} className="modal-form">
           <Input id="alert-title" label="Título" placeholder="Ex: Reunião de pais" value={form.title} onChange={(e) => setForm(f => ({ ...f, title: e.target.value }))} required />
-          <Input id="alert-message" label="Mensagem" placeholder="Descreva o alerta..." value={form.message} onChange={(e) => setForm(f => ({ ...f, message: e.target.value }))} required />
-          <Select id="alert-priority" label="Prioridade" options={[{ value: 'NEAR', label: 'Próximo (7d)' }, { value: 'URGENT', label: 'Urgente (24h)' }, { value: 'OVERDUE', label: 'Atrasado' }]} value={form.priority} onChange={(e) => setForm(f => ({ ...f, priority: e.target.value }))} />
+          <Input id="alert-message" label="Mensagem" placeholder="Descreva o alerta…" value={form.message} onChange={(e) => setForm(f => ({ ...f, message: e.target.value }))} required />
+          <Select id="alert-priority" label="Prioridade" options={[{ value: 'NEAR', label: 'Próximo (7 dias)' }, { value: 'URGENT', label: 'Urgente (24h)' }, { value: 'OVERDUE', label: 'Atrasado' }]} value={form.priority} onChange={(e) => setForm(f => ({ ...f, priority: e.target.value }))} />
           <Input id="alert-date" label="Data de vencimento (opcional)" type="date" value={form.dueDate} onChange={(e) => setForm(f => ({ ...f, dueDate: e.target.value }))} />
         </form>
       </Modal>
@@ -106,7 +120,7 @@ export function AlertsPage() {
       <Modal open={!!confirmDelete} onClose={() => setConfirmDelete(null)} title="Excluir alerta" size="sm"
         footer={<ModalActions onCancel={() => setConfirmDelete(null)} onConfirm={async () => { if (confirmDelete) { await deleteAlert(confirmDelete.id); setConfirmDelete(null); }}} confirmLabel="Excluir" danger />}
       >
-        <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>Excluir <strong style={{ color: 'var(--color-text)' }}>{confirmDelete?.title}</strong>?</p>
+        <p className="confirm-text">Excluir <strong>{confirmDelete?.title}</strong>?</p>
       </Modal>
     </div>
   );
