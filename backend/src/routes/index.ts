@@ -11,6 +11,7 @@ import classesRoutes from "./classes.routes";
 import lessonsRoutes from "./lessons.routes";
 import postsRoutes from "./posts.routes";
 import usersRoutes from "./users.routes";
+import aiRoutes from "./ai.routes";
 
 const routes = Router();
 
@@ -21,6 +22,7 @@ routes.use("/lessons", lessonsRoutes);
 routes.use("/assessments", assessmentsRoutes);
 routes.use("/alerts", alertsRoutes);
 routes.use("/bimester-plans", bimesterPlansRoutes);
+routes.use("/ai", aiRoutes);
 
 routes.get("/admin/posts", isAdmin, PostsController.getAll);
 routes.delete("/admin/posts/:id", isAdmin, PostsController.delete);
