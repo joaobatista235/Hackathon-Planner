@@ -12,7 +12,9 @@ import lessonsRoutes from "./lessons.routes";
 import postsRoutes from "./posts.routes";
 import usersRoutes from "./users.routes";
 import aiRoutes from "./ai.routes";
+import aiGroqRoutes from "./ai.routes.groq";
 import attachmentsRoutes from "./attachments.routes";
+import aiHistoryroutes from "./aiHistory.routes";
 
 const routes = Router();
 
@@ -24,6 +26,8 @@ routes.use("/assessments", assessmentsRoutes);
 routes.use("/alerts", alertsRoutes);
 routes.use("/bimester-plans", bimesterPlansRoutes);
 routes.use("/ai", aiRoutes);
+routes.use("/aigroq", aiGroqRoutes);
+routes.use("/ai-history", aiHistoryroutes);
 routes.use("/", attachmentsRoutes);
 
 routes.get("/admin/posts", isAdmin, PostsController.getAll);
