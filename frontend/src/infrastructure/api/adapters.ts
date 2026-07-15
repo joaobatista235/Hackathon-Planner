@@ -76,3 +76,18 @@ export const bimesterPlansApi = {
   complete: (id: string) => api.patch(`/bimester-plans/${id}/complete`).then((r) => r.data),
   delete: (id: string) => api.delete(`/bimester-plans/${id}`),
 };
+
+export const attachmentsApi = {
+  getByLesson: (lessonId: string) =>
+    api.get(`/lessons/${lessonId}/attachments`).then((r) => r.data),
+  upload: (lessonId: string, file: File) => {
+    const form = new FormData();
+    form.append('file', file);
+    return api
+      .post(`/lessons/${lessonId}/attachments`, form, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+      .then((r) => r.data);
+  },
+  delete: (id: string) => api.delete(`/attachments/${id}`),
+};

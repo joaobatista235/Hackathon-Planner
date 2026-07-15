@@ -21,7 +21,9 @@ export type IconName =
   | 'alert-triangle'
   | 'clock'
   | 'user'
-  | 'loader';
+  | 'loader'
+  | 'play'
+  | 'info';
 
 interface IconProps {
   name: IconName;
@@ -145,6 +147,16 @@ const PATHS: Record<IconName, React.ReactElement> = {
       <line x1="18" y1="12" x2="22" y2="12" />
       <line x1="4.93" y1="19.07" x2="7.76" y2="16.24" />
       <line x1="16.24" y1="7.76" x2="19.07" y2="4.93" />
+    </>
+  ),
+  play: (
+    <polygon points="5 3 19 12 5 21 5 3" />
+  ),
+  info: (
+    <>
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="8" x2="12" y2="12" />
+      <line x1="12" y1="16" x2="12.01" y2="16" />
     </>
   ),
 };

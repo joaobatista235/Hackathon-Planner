@@ -87,8 +87,22 @@ model Lesson {
   classId String
   class   Class  @relation(fields: [classId], references: [id])
 
-  authorId String
-  author   User   @relation("UserLessons", fields: [authorId], references: [id])
+  authorId    String
+  author      User         @relation("UserLessons", fields: [authorId], references: [id])
+  attachments Attachment[]
+}
+
+model Attachment {
+  id           String   @id @default(uuid())
+  filename     String
+  originalName String
+  mimetype     String
+  size         Int
+  url          String
+  createdAt    DateTime @default(now())
+
+  lessonId String
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
 }
 
 model Assessment {

@@ -3,6 +3,7 @@ import { useClasses } from '@/application/hooks/useClasses';
 import { useBimesterPlans } from '@/application/hooks/useBimesterPlans';
 import { Button } from '@/presentation/components/base/Button/Button';
 import { Input } from '@/presentation/components/base/Input/Input';
+import { Textarea } from '@/presentation/components/base/Textarea/Textarea';
 import { Select } from '@/presentation/components/base/Select/Select';
 import { Modal, ModalActions } from '@/presentation/components/base/Modal/Modal';
 import { EmptyState } from '@/presentation/components/base/EmptyState/EmptyState';
@@ -38,9 +39,20 @@ export function BimesterPlansPage() {
   };
 
   const handleSave = async () => {
+    if (!form.title || !form.goals || !form.startsAt || !form.endsAt || !form.classId) {
+      alert('Preencha todos os campos obrigatórios.');
+      return;
+    }
     setSaving(true);
     try {
-      const data = { ...form, startsAt: new Date(form.startsAt).toISOString(), endsAt: new Date(form.endsAt).toISOString() };
+      // Append T00:00:00Z to date-only strings so new Date() parses as UTC
+      const toISO = (d: string) =>
+        d.includes('T') ? d : `${d}T00:00:00.000Z`;
+      const data = {
+        ...form,
+        startsAt: toISO(form.startsAt),
+        endsAt: toISO(form.endsAt),
+      };
       if (editTarget) { await updatePlan(editTarget.id, data); }
       else { await createPlan(data); }
       setShowModal(false);
@@ -136,7 +148,7 @@ export function BimesterPlansPage() {
       >
         <form id="plan-form" onSubmit={handleSubmit} className="modal-form">
           <Input id="plan-title" label="Título" placeholder="Ex: 1º Bimestre 2025" value={form.title} onChange={(e) => setForm(f => ({ ...f, title: e.target.value }))} required />
-          <Input id="plan-goals" label="Objetivos" placeholder="Descreva os objetivos do período…" value={form.goals} onChange={(e) => setForm(f => ({ ...f, goals: e.target.value }))} required />
+          <Textarea id="plan-goals" label="Objetivos" placeholder="Descreva os objetivos, competências e habilidades do período…" rows={5} value={form.goals} onChange={(e) => setForm(f => ({ ...f, goals: e.target.value }))} required />
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)' }}>
             <Input id="plan-start" label="Início" type="date" value={form.startsAt} onChange={(e) => setForm(f => ({ ...f, startsAt: e.target.value }))} required />
             <Input id="plan-end" label="Término" type="date" value={form.endsAt} onChange={(e) => setForm(f => ({ ...f, endsAt: e.target.value }))} required />

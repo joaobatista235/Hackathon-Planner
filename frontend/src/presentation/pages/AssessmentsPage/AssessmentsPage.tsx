@@ -3,6 +3,7 @@ import { useClasses } from '@/application/hooks/useClasses';
 import { useAssessments } from '@/application/hooks/useAssessments';
 import { Button } from '@/presentation/components/base/Button/Button';
 import { Input } from '@/presentation/components/base/Input/Input';
+import { Textarea } from '@/presentation/components/base/Textarea/Textarea';
 import { Select } from '@/presentation/components/base/Select/Select';
 import { Modal, ModalActions } from '@/presentation/components/base/Modal/Modal';
 import { EmptyState } from '@/presentation/components/base/EmptyState/EmptyState';
@@ -40,9 +41,14 @@ export function AssessmentsPage() {
   };
 
   const handleSave = async () => {
+    if (!form.title || !form.dueDate || !form.classId) {
+      alert('Preencha título, data e turma.');
+      return;
+    }
     setSaving(true);
     try {
-      const dueDate = new Date(form.dueDate).toISOString();
+      const toISO = (d: string) => d.includes('T') ? d : `${d}T00:00:00.000Z`;
+      const dueDate = toISO(form.dueDate);
       if (editTarget) {
         await updateAssessment(editTarget.id, { ...form, dueDate });
       } else {
@@ -128,7 +134,7 @@ export function AssessmentsPage() {
       >
         <form id="assessment-form" onSubmit={handleSubmit} className="modal-form">
           <Input id="ass-title" label="Título" placeholder="Ex: Prova de Álgebra" value={form.title} onChange={(e) => setForm(f => ({ ...f, title: e.target.value }))} required />
-          <Input id="ass-desc" label="Observações" placeholder="Opcional…" value={form.description} onChange={(e) => setForm(f => ({ ...f, description: e.target.value }))} />
+          <Textarea id="ass-desc" label="Observações" placeholder="Conteúdo, critérios de avaliação…" rows={3} value={form.description} onChange={(e) => setForm(f => ({ ...f, description: e.target.value }))} />
           <Select id="ass-type" label="Tipo" options={[{ value: 'PROVA', label: 'Prova' }, { value: 'TRABALHO', label: 'Trabalho' }]} value={form.type} onChange={(e) => setForm(f => ({ ...f, type: e.target.value }))} />
           <Input id="ass-date" label="Data de entrega" type="date" value={form.dueDate} onChange={(e) => setForm(f => ({ ...f, dueDate: e.target.value }))} required />
           <Select id="ass-class" label="Turma" options={classOptions} placeholder="Selecione a turma" value={form.classId} onChange={(e) => setForm(f => ({ ...f, classId: e.target.value }))} required />

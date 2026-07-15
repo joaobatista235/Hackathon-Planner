@@ -28,6 +28,17 @@ export interface Class {
   authorId: string;
 }
 
+export interface Attachment {
+  id: string;
+  filename: string;
+  originalName: string;
+  mimetype: string;
+  size: number;
+  url: string;
+  lessonId: string;
+  createdAt: string;
+}
+
 export interface Lesson {
   id: string;
   title: string;
@@ -37,6 +48,7 @@ export interface Lesson {
   classId: string;
   class?: Pick<Class, 'id' | 'name' | 'subject'>;
   authorId: string;
+  attachments?: Attachment[];
 }
 
 export interface Assessment {
