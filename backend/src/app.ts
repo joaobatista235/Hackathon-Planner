@@ -1,4 +1,5 @@
 import "dotenv/config";
+import path from "path";
 import express from "express";
 import helmet from "helmet";
 import cors from "cors";
@@ -14,18 +15,22 @@ app.use(helmet());
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "http://localhost:3001",
-      "http://localhost:3002",
-      "http://localhost:5173",
-      "http://localhost:4173",
-    ],
+    origin: (origin, callback) => {
+      // Allow any localhost/127.0.0.1 origin (all Vite ports) + no-origin (curl/Postman)
+      if (!origin || /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`CORS: origin not allowed — ${origin}`));
+      }
+    },
     credentials: true,
   }),
 );
 
 app.use(express.json());
+
+// Serve uploaded files (PDFs, videos)
+app.use("/uploads", express.static(path.resolve(process.cwd(), "uploads")));
 
 app.use("/api", routes);
 
