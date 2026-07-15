@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useAlerts } from '@/application/hooks/useAlerts';
 import { Button } from '@/presentation/components/base/Button/Button';
 import { Input } from '@/presentation/components/base/Input/Input';
+import { Textarea } from '@/presentation/components/base/Textarea/Textarea';
 import { Select } from '@/presentation/components/base/Select/Select';
 import { Modal, ModalActions } from '@/presentation/components/base/Modal/Modal';
 import { EmptyState } from '@/presentation/components/base/EmptyState/EmptyState';
@@ -111,7 +112,7 @@ export function AlertsPage() {
       >
         <form id="alert-form" onSubmit={handleSubmit} className="modal-form">
           <Input id="alert-title" label="Título" placeholder="Ex: Reunião de pais" value={form.title} onChange={(e) => setForm(f => ({ ...f, title: e.target.value }))} required />
-          <Input id="alert-message" label="Mensagem" placeholder="Descreva o alerta…" value={form.message} onChange={(e) => setForm(f => ({ ...f, message: e.target.value }))} required />
+          <Textarea id="alert-message" label="Mensagem" placeholder="Descreva o alerta com detalhes…" rows={3} value={form.message} onChange={(e) => setForm(f => ({ ...f, message: e.target.value }))} required />
           <Select id="alert-priority" label="Prioridade" options={[{ value: 'NEAR', label: 'Próximo (7 dias)' }, { value: 'URGENT', label: 'Urgente (24h)' }, { value: 'OVERDUE', label: 'Atrasado' }]} value={form.priority} onChange={(e) => setForm(f => ({ ...f, priority: e.target.value }))} />
           <Input id="alert-date" label="Data de vencimento (opcional)" type="date" value={form.dueDate} onChange={(e) => setForm(f => ({ ...f, dueDate: e.target.value }))} />
         </form>
