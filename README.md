@@ -43,23 +43,26 @@ Edite `backend/.env` se necessário. Por padrão já funciona com o Docker Compo
 ```bash
 cd backend
 docker compose up -d
+npm run dev
 ```
 
 Isso inicia:
-- `post-service-api` → API REST em `http://localhost:3000`
+- `hackathon-planner-api` → API REST em `http://localhost:3000`
 - `postgres` → Banco de dados PostgreSQL em `localhost:5432`
 - `adminer` → Interface visual do banco em `http://localhost:8080`
 
 ### 2.3 Aplique o schema no banco
 
 ```bash
-docker exec post-service-api npx prisma db push
+cd backend
+npx prisma db push
 ```
 
 ### 2.4 Crie os usuários padrão (seed)
 
 ```bash
-docker exec post-service-api npx tsx prisma/seed.ts
+cd backend
+ npx tsx prisma/seed.ts
 ```
 
 Credenciais criadas:
@@ -100,6 +103,7 @@ Acesse em `http://localhost:5173`.
 
 ```bash
 # Backend
+#Ctrl+C no terminal onde o npm run dev está rodando
 cd backend && docker compose down
 
 # Frontend
