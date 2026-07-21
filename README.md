@@ -39,7 +39,7 @@ Edite `backend/.env` se necessário. Por padrão já funciona com o Docker Compo
 | `JWT_SECRET` | — | Segredo para tokens JWT (altere em produção) |
 | `GEMINI_API_KEY` | — | Chave da API Google Gemini (funcionalidade de IA) |
 
-Caso deseje utilizar as funcionalidades de IA, gere uma chave de API do Google Gemini e adicione-a à variável GEMINI_API_KEY no arquivo .env
+Para utilizar as funcionalidades de IA com o Google Gemini, crie um projeto no Google AI Studio ou Google Cloud, gere uma chave de API e configure a variável de ambiente GEMINI_API_KEY no arquivo .env.
 
 ### 2.2 Suba os serviços
 
