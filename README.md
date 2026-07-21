@@ -42,7 +42,7 @@ Edite `backend/.env` se necessário. Por padrão já funciona com o Docker Compo
 
 ```bash
 cd backend
-docker compose up -d
+npm run dev docker compose up -d
 ```
 
 Isso inicia:
