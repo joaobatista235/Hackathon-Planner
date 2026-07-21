@@ -6,11 +6,9 @@ class AiHistoryService {
     return aiHistoryRepository.getAll();
   }
 
-
   async getById(id: number) {
     return aiHistoryRepository.getById(id);
   }
-
 
   async create(data: {
     userId: string;
@@ -28,21 +26,17 @@ class AiHistoryService {
     });
   }
 
-
   async getByUserId(userId: string) {
     return aiHistoryRepository.getByUserId(userId);
   }
-
 
   async getHistory(userId: string) {
     return aiHistoryRepository.getHistory(userId);
   }
 
-
   async delete(id: number) {
     return aiHistoryRepository.delete(id);
   }
-
 
   async deleteByUserId(userId: string) {
     return aiHistoryRepository.deleteByUserId(userId);

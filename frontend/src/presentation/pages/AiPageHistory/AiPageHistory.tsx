@@ -124,9 +124,9 @@ export function AiPageHistory() {
                 {message.role === "USER"
                   ? "Você"
                   : "Assistente IA"}
-                    <br/>
+                <br />
               </strong>
-  <br/>
+              <br />
               <span>
                 {formatDate(message.createdAt)}
               </span>
@@ -143,13 +143,13 @@ export function AiPageHistory() {
             </div>
 
             <div className="chat-message__content">
-  <ReactMarkdown remarkPlugins={[remarkGfm]}>
-    {message.content}
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {message.content}
 
-  </ReactMarkdown>
+              </ReactMarkdown>
 
-                    <br/>
-</div>
+              <br />
+            </div>
 
           </div>
 

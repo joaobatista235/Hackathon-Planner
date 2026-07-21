@@ -4,13 +4,13 @@ import { Icon, type IconName } from '@/presentation/components/base/Icon/Icon';
 import './Sidebar.css';
 
 const NAV_ITEMS: { to: string; label: string; icon: IconName }[] = [
-  { to: '/dashboard',      label: 'Dashboard',    icon: 'grid' },
-  { to: '/classes',        label: 'Turmas',        icon: 'school' },
-  { to: '/lessons',        label: 'Aulas',         icon: 'book-open' },
-  { to: '/calendar',       label: 'Calendário',    icon: 'calendar' },
-  { to: '/assessments',    label: 'Avaliações',    icon: 'clipboard' },
-  { to: '/alerts',         label: 'Alertas',       icon: 'bell' },
-  { to: '/bimester-plans', label: 'Planejamento',  icon: 'bar-chart' },
+  { to: '/dashboard', label: 'Dashboard', icon: 'grid' },
+  { to: '/classes', label: 'Turmas', icon: 'school' },
+  { to: '/lessons', label: 'Aulas', icon: 'book-open' },
+  { to: '/calendar', label: 'Calendário', icon: 'calendar' },
+  { to: '/assessments', label: 'Avaliações', icon: 'clipboard' },
+  { to: '/alerts', label: 'Alertas', icon: 'bell' },
+  { to: '/bimester-plans', label: 'Planejamento', icon: 'bar-chart' },
 ];
 
 export function Sidebar() {
