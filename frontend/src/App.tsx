@@ -10,7 +10,6 @@ import { CalendarPage } from '@/presentation/pages/CalendarPage/CalendarPage';
 import { AssessmentsPage } from '@/presentation/pages/AssessmentsPage/AssessmentsPage';
 import { AlertsPage } from '@/presentation/pages/AlertsPage/AlertsPage';
 import { BimesterPlansPage } from '@/presentation/pages/BimesterPlansPage/BimesterPlansPage';
-import {AiPage} from "@/presentation/pages/AiPage/AiPage";
 
 function ProtectedLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -65,10 +64,6 @@ export default function App() {
       <Route
         path="/bimester-plans"
         element={<ProtectedLayout><BimesterPlansPage /></ProtectedLayout>}
-      />
-      <Route
-        path="/ai"
-        element={<ProtectedLayout><AiPage /></ProtectedLayout>}
       />
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
       <Route path="*" element={<Navigate to="/dashboard" replace />} />

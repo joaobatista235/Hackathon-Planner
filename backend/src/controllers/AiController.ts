@@ -3,26 +3,27 @@ import { AIService } from "@/services/ai.service";
 
 const aiService = new AIService();
 
-export async function chat(req: Request, res: Response) {
-  try {
-    const { message, classId } = req.body;
+class AiController {
+  async chat(req: Request, res: Response) {
+    try {
+      const { message, userId, classId } = req.body;
 
-    if (!message) {
-      return res.status(400).json({
-        message: "O campo 'message' é obrigatório.",
+      if (!message || !userId) {
+        return res.status(400).json({
+          message: "O campo 'message' e 'userId' são obrigatórios.",
+        });
+      }
+
+      const response = await aiService.chat(userId, message, classId);
+
+      return res.status(200).json(response);
+    } catch (error: any) {
+      console.error("Erro no AiController:", error.message);
+      return res.status(500).json({
+        message: error.message,
       });
     }
-
-    const response = await aiService.chat(message, classId);
-
-    return res.status(200).json({
-      response,
-    });
-  } catch (error: any) {
-    console.error(error);
-
-    return res.status(500).json({
-      message: error.message || "Erro ao consultar a IA.",
-    });
   }
 }
+
+export const chat = new AiController().chat;

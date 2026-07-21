@@ -10,7 +10,7 @@ interface Message {
 export function AiPage() {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const { user } = useAuth(); 
+  const { user } = useAuth();
 
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -53,7 +53,7 @@ export function AiPage() {
           },
           body: JSON.stringify({
             message: userMessage.content,
-            userId: user.id, 
+            userId: user.id,
           }),
         }
       );

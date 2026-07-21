@@ -28,15 +28,6 @@ export interface Class {
   authorId: string;
 }
 
-
-
-interface AiHistory {
-  id: string;
-  role: "user" | "assistant";
-  content: string;
-  createdAt: string;
-}
-
 export interface Attachment {
   id: string;
   filename: string;

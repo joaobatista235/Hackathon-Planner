@@ -12,7 +12,6 @@ class AiHistoryRepository {
     });
   }
 
-
   async getById(id: number) {
     return prisma.aiMessage.findUnique({
       where: {
@@ -21,13 +20,11 @@ class AiHistoryRepository {
     });
   }
 
-
   async create(data: Prisma.AiMessageCreateInput) {
     return prisma.aiMessage.create({
       data,
     });
   }
-
 
   async delete(id: number) {
     return prisma.aiMessage.delete({
@@ -36,7 +33,6 @@ class AiHistoryRepository {
       },
     });
   }
-
 
   async getByUserId(userId: string) {
     return prisma.aiMessage.findMany({
@@ -49,7 +45,6 @@ class AiHistoryRepository {
     });
   }
 
-
   async getHistory(userId: string) {
     return prisma.aiMessage.findMany({
       where: {
@@ -60,7 +55,6 @@ class AiHistoryRepository {
       },
     });
   }
-
 
   async deleteByUserId(userId: string) {
     return prisma.aiMessage.deleteMany({

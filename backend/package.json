@@ -18,7 +18,7 @@
   "license": "ISC",
   "description": "API do Hackathon Planner",
   "dependencies": {
-    "@google/genai": "^2.11.0",
+    "@google/genai": "^2.12.0",
     "@prisma/client": "6.19.0",
     "@types/multer": "^2.2.0",
     "bcrypt": "6.0.0",
@@ -28,7 +28,7 @@
     "helmet": "8.2.0",
     "jsonwebtoken": "9.0.3",
     "multer": "^2.2.0",
-    "openai": "^6.47.0",
+    "openai": "^6.48.0",
     "pg": "8.22.0",
     "prisma": "^6.19.0",
     "swagger-jsdoc": "6.3.0",

@@ -15,7 +15,6 @@ export function Badge({ variant = 'muted', size = 'md', children }: BadgeProps) 
   );
 }
 
-// Domain-specific badge helpers
 const ASSESSMENT_TYPE_LABELS: Record<AssessmentType, string> = {
   PROVA: 'Prova',
   TRABALHO: 'Trabalho',

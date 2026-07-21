@@ -23,7 +23,10 @@ export type IconName =
   | 'user'
   | 'loader'
   | 'play'
-  | 'info';
+  | 'info'
+  | 'send'
+  | 'bot'
+  | 'message-circle';
 
 interface IconProps {
   name: IconName;
@@ -158,6 +161,21 @@ const PATHS: Record<IconName, React.ReactElement> = {
       <line x1="12" y1="8" x2="12" y2="12" />
       <line x1="12" y1="16" x2="12.01" y2="16" />
     </>
+  ),
+  send: (
+    <path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z" />
+  ),
+  bot: (
+    <>
+      <rect x="3" y="11" width="18" height="10" rx="2" />
+      <circle cx="9" cy="16" r="1" />
+      <circle cx="15" cy="16" r="1" />
+      <path d="M12 11V7" />
+      <path d="M8 7h8" />
+    </>
+  ),
+  'message-circle': (
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
   ),
 };
 
