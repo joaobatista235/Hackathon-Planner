@@ -103,6 +103,7 @@ Acesse em `http://localhost:5173`.
 
 ```bash
 # Backend
+#Ctrl+C no terminal onde o npm run dev está rodando
 cd backend && docker compose down
 
 # Frontend
